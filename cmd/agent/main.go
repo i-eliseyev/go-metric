@@ -185,19 +185,19 @@ func reportMetrics(metrics *Metrics) {
 		}
 		request.Header.Set("Content-Type", "text/plain")
 		response, err := client.Do(request)
-		defer response.Body.Close()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-
+		fmt.Println("Статус-код ", response.Status)
+		defer response.Body.Close()
 	}
 }
 
 func main() {
 	metrics := make(Metrics)
-	fillMetricsTicker := time.NewTicker(pollInterval)     // каждые 5 секунд
-	reportMetricsTicker := time.NewTicker(reportInterval) // каждые 5 секунд
+	fillMetricsTicker := time.NewTicker(pollInterval)
+	reportMetricsTicker := time.NewTicker(reportInterval)
 	defer fillMetricsTicker.Stop()
 	defer reportMetricsTicker.Stop()
 
