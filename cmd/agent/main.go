@@ -184,11 +184,15 @@ func reportMetrics(metrics *Metrics) {
 			os.Exit(1)
 		}
 		request.Header.Set("Content-Type", "text/plain")
-		_, err = client.Do(request)
+		response, err := client.Do(request)
+		if response != nil {
+			defer response.Body.Close()
+		}
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
+
 	}
 }
 
