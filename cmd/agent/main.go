@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"runtime"
@@ -177,20 +178,31 @@ func fillMetrics(metrics *Metrics) {
 func reportMetrics(metrics *Metrics) {
 	client := &http.Client{}
 	for _, metric := range *metrics {
-		url := fmt.Sprintf("http://%s:%s/update/%s/%s/%v", serverAddr, serverPort, metric.Type, metric.Name, metric.Val)
+		url := fmt.Sprintf(
+			"http://%s:%s/update/%s/%s/%v",
+			serverAddr,
+			serverPort,
+			metric.Type,
+			metric.Name,
+			metric.Val,
+		)
 		request, err := http.NewRequest(http.MethodPost, url, nil)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			os.Exit(1)
 		}
 		request.Header.Set("Content-Type", "text/plain")
 		response, err := client.Do(request)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 			os.Exit(1)
 		}
-		fmt.Println("Статус-код ", response.Status)
-		defer response.Body.Close()
+		log.Println("Status: ", response.Status)
+		err = response.Body.Close()
+		if err != nil {
+			log.Println(err)
+			os.Exit(1)
+		}
 	}
 }
 
