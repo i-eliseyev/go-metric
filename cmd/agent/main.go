@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/i-eliseyev/go-metric/internal/common"
 	"log"
 	"net/http"
 	"os"
@@ -9,173 +10,165 @@ import (
 	"time"
 )
 
-type Metric struct {
-	Name string
-	Type string
-	Val  interface{}
-}
-
-type Metrics map[string]Metric
-
 var globalCounter int
 var pollInterval = 2 * time.Second
 var reportInterval = 10 * time.Second
 var serverAddr = "127.0.0.1"
 var serverPort = "8080"
 
-func fillMetrics(metrics *Metrics) {
+func fillMetrics(metrics *common.Metrics) {
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
 
-	(*metrics)["alloc"] = Metric{
+	(*metrics)["alloc"] = common.Metric{
 		Name: "Alloc",
 		Type: "gauge",
 		Val:  float64(memStats.Alloc),
 	}
-	(*metrics)["buckHashSys"] = Metric{
+	(*metrics)["buckHashSys"] = common.Metric{
 		Name: "BuckHashSys",
 		Type: "gauge",
 		Val:  float64(memStats.BuckHashSys),
 	}
-	(*metrics)["frees"] = Metric{
+	(*metrics)["frees"] = common.Metric{
 		Name: "Frees",
 		Type: "gauge",
 		Val:  float64(memStats.Frees),
 	}
-	(*metrics)["gCCPUFraction"] = Metric{
+	(*metrics)["gCCPUFraction"] = common.Metric{
 		Name: "GCCPUFraction",
 		Type: "gauge",
 		Val:  memStats.GCCPUFraction,
 	}
-	(*metrics)["gSys"] = Metric{
+	(*metrics)["gSys"] = common.Metric{
 		Name: "GSys",
 		Type: "gauge",
 		Val:  float64(memStats.GCSys),
 	}
-	(*metrics)["heapAlloc"] = Metric{
+	(*metrics)["heapAlloc"] = common.Metric{
 		Name: "HeapAlloc",
 		Type: "gauge",
 		Val:  float64(memStats.HeapAlloc),
 	}
-	(*metrics)["heapIdle"] = Metric{
+	(*metrics)["heapIdle"] = common.Metric{
 		Name: "HeapIdle",
 		Type: "gauge",
 		Val:  float64(memStats.HeapIdle),
 	}
-	(*metrics)["heapInuse"] = Metric{
+	(*metrics)["heapInuse"] = common.Metric{
 		Name: "HeapInuse",
 		Type: "gauge",
 		Val:  float64(memStats.HeapInuse),
 	}
-	(*metrics)["heapObjects"] = Metric{
+	(*metrics)["heapObjects"] = common.Metric{
 		Name: "HeapObjects",
 		Type: "gauge",
 		Val:  float64(memStats.HeapObjects),
 	}
-	(*metrics)["heapReleased"] = Metric{
+	(*metrics)["heapReleased"] = common.Metric{
 		Name: "HeapReleased",
 		Type: "gauge",
 		Val:  float64(memStats.HeapReleased),
 	}
-	(*metrics)["heapSys"] = Metric{
+	(*metrics)["heapSys"] = common.Metric{
 		Name: "HeapSys",
 		Type: "gauge",
 		Val:  float64(memStats.HeapSys),
 	}
-	(*metrics)["lastGC"] = Metric{
+	(*metrics)["lastGC"] = common.Metric{
 		Name: "LastGC",
 		Type: "gauge",
 		Val:  float64(memStats.LastGC),
 	}
-	(*metrics)["lookups"] = Metric{
+	(*metrics)["lookups"] = common.Metric{
 		Name: "Lookups",
 		Type: "gauge",
 		Val:  float64(memStats.Lookups),
 	}
-	(*metrics)["mCacheInuse"] = Metric{
+	(*metrics)["mCacheInuse"] = common.Metric{
 		Name: "MCacheInuse",
 		Type: "gauge",
 		Val:  float64(memStats.MCacheInuse),
 	}
-	(*metrics)["mCacheSys"] = Metric{
+	(*metrics)["mCacheSys"] = common.Metric{
 		Name: "MCacheSys",
 		Type: "gauge",
 		Val:  float64(memStats.MCacheSys),
 	}
-	(*metrics)["mSpanInuse"] = Metric{
+	(*metrics)["mSpanInuse"] = common.Metric{
 		Name: "MSpanInuse",
 		Type: "gauge",
 		Val:  float64(memStats.MSpanInuse),
 	}
-	(*metrics)["mSpanSys"] = Metric{
+	(*metrics)["mSpanSys"] = common.Metric{
 		Name: "MSpanSys",
 		Type: "gauge",
 		Val:  float64(memStats.MSpanSys),
 	}
-	(*metrics)["mallocs"] = Metric{
+	(*metrics)["mallocs"] = common.Metric{
 		Name: "Mallocs",
 		Type: "gauge",
 		Val:  float64(memStats.Mallocs),
 	}
-	(*metrics)["nextGC"] = Metric{
+	(*metrics)["nextGC"] = common.Metric{
 		Name: "NextGC",
 		Type: "gauge",
 		Val:  float64(memStats.NextGC),
 	}
-	(*metrics)["numForcedGC"] = Metric{
+	(*metrics)["numForcedGC"] = common.Metric{
 		Name: "NumForcedGC",
 		Type: "gauge",
 		Val:  float64(memStats.NumForcedGC),
 	}
-	(*metrics)["numGC"] = Metric{
+	(*metrics)["numGC"] = common.Metric{
 		Name: "NumGC",
 		Type: "gauge",
 		Val:  float64(memStats.NumGC),
 	}
-	(*metrics)["otherSys"] = Metric{
+	(*metrics)["otherSys"] = common.Metric{
 		Name: "OtherSys",
 		Type: "gauge",
 		Val:  float64(memStats.OtherSys),
 	}
-	(*metrics)["pauseTotalNs"] = Metric{
+	(*metrics)["pauseTotalNs"] = common.Metric{
 		Name: "PauseTotalNs",
 		Type: "gauge",
 		Val:  float64(memStats.PauseTotalNs),
 	}
-	(*metrics)["stackInuse"] = Metric{
+	(*metrics)["stackInuse"] = common.Metric{
 		Name: "StackInuse",
 		Type: "gauge",
 		Val:  float64(memStats.StackInuse),
 	}
-	(*metrics)["stackSys"] = Metric{
+	(*metrics)["stackSys"] = common.Metric{
 		Name: "StackSys",
 		Type: "gauge",
 		Val:  float64(memStats.StackSys),
 	}
-	(*metrics)["sys"] = Metric{
+	(*metrics)["sys"] = common.Metric{
 		Name: "Sys",
 		Type: "gauge",
 		Val:  float64(memStats.Sys),
 	}
-	(*metrics)["totalAlloc"] = Metric{
+	(*metrics)["totalAlloc"] = common.Metric{
 		Name: "TotalAlloc",
 		Type: "gauge",
 		Val:  float64(memStats.TotalAlloc),
 	}
 	globalCounter++
-	(*metrics)["pollCount"] = Metric{
+	(*metrics)["pollCount"] = common.Metric{
 		Name: "PollCount",
 		Type: "counter",
 		Val:  globalCounter,
 	}
-	(*metrics)["randomValue"] = Metric{
+	(*metrics)["randomValue"] = common.Metric{
 		Name: "RandomValue",
 		Type: "gauge",
 		Val:  time.Now().UnixNano(),
 	}
 }
 
-func reportMetrics(metrics *Metrics) {
+func reportMetrics(metrics *common.Metrics) {
 	client := &http.Client{}
 	for _, metric := range *metrics {
 		url := fmt.Sprintf(
@@ -207,7 +200,7 @@ func reportMetrics(metrics *Metrics) {
 }
 
 func main() {
-	metrics := make(Metrics)
+	metrics := make(common.Metrics)
 	fillMetricsTicker := time.NewTicker(pollInterval)
 	reportMetricsTicker := time.NewTicker(reportInterval)
 	defer fillMetricsTicker.Stop()
