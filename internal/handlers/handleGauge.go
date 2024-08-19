@@ -8,7 +8,7 @@ import (
 
 func HandleGauge(writer http.ResponseWriter, request *http.Request) {
 	log.Println("Serving: ", request.URL.Path)
-	err, metric := getMetricFromRequest(request, urlPrefixGauge)
+	metric, err := getMetricFromRequest(request, urlPrefixGauge)
 
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)

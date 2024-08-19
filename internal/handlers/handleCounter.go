@@ -8,7 +8,7 @@ import (
 
 func HandleCounter(writer http.ResponseWriter, request *http.Request) {
 	log.Println("Serving: ", request.URL.Path)
-	err, metric := getMetricFromRequest(request, urlPrefixCounter)
+	metric, err := getMetricFromRequest(request, urlPrefixCounter)
 
 	if err != nil {
 		writer.WriteHeader(http.StatusNotFound)
