@@ -2,7 +2,7 @@ package agent
 
 import "time"
 
-var GlobalCounter float64
+var GlobalPollsCounter int64
 
 const (
 	PollInterval   = 2 * time.Second
