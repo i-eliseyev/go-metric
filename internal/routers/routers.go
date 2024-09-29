@@ -12,5 +12,5 @@ func SetupRouters(app *fiber.App) {
 	update.Post("/", handlers.HandleUpdateMetric)
 
 	value := app.Group("/value")
-	value.Get("/:type/:name", handlers.HandleGetMetric)
+	value.Get("/", handlers.HandleGetMetric)
 }

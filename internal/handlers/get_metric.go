@@ -1,10 +1,9 @@
 package handlers
 
 import (
-	"errors"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/i-eliseyev/go-metric/internal/common"
 	"github.com/i-eliseyev/go-metric/internal/storage"
 	"net/http"
 )
@@ -12,14 +11,15 @@ import (
 func HandleGetMetric(ctx *fiber.Ctx) error {
 	log.Info("Serving: ", ctx.OriginalURL())
 
-	metricType := utils.CopyString(ctx.Params("type"))
-	if metricType != "counter" && metricType != "gauge" {
-		log.Warnw("Wrong metric type", "type", metricType)
+	requestedMetric := new(common.Metric)
+	err := ctx.BodyParser(requestedMetric)
+	if err != nil {
+		log.Warn(err)
 		ctx.Status(http.StatusBadRequest)
-		return errors.New("invalid type")
+		return err
 	}
 
-	metric, err := storage.MetricStorage.GetMetric(ctx.Params("name"))
+	metric, err := storage.MetricStorage.GetMetric(requestedMetric.ID)
 	if err != nil {
 		ctx.Status(http.StatusNotFound)
 		return err
