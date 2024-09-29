@@ -3,6 +3,7 @@ package storage
 import (
 	"errors"
 	"github.com/i-eliseyev/go-metric/internal/common"
+	"github.com/i-eliseyev/go-metric/internal/utils"
 	"log"
 )
 
@@ -19,25 +20,25 @@ func init() {
 }
 
 func (ms *MemStorage) UpdateGauge(m *common.Metric) {
-	ms.Metrics[m.Name] = *m
-	log.Printf("Updated gauge %s value: %f", m.Name, m.Val)
+	ms.Metrics[m.ID] = *m
+	log.Printf("Updated gauge %s value: %f", m.ID, *m.Value)
 }
 
 func (ms *MemStorage) UpdateCounter(m *common.Metric) {
-	if existingMetric, ok := ms.Metrics[m.Name]; ok {
-		ms.Metrics[m.Name] = common.Metric{
-			Name: m.Name,
-			Type: m.Type,
-			Val:  existingMetric.Val + m.Val,
+	if existingMetric, ok := ms.Metrics[m.ID]; ok {
+		ms.Metrics[m.ID] = common.Metric{
+			ID:    m.ID,
+			MType: m.MType,
+			Delta: utils.AddFloat64Ptr(existingMetric.Delta, m.Delta),
 		}
 	} else {
-		ms.Metrics[m.Name] = common.Metric{
-			Name: m.Name,
-			Type: m.Type,
-			Val:  m.Val,
+		ms.Metrics[m.ID] = common.Metric{
+			ID:    m.ID,
+			MType: m.MType,
+			Delta: m.Delta,
 		}
 	}
-	log.Printf("Updated counter %s value: %f", m.Name, ms.Metrics[m.Name].Val)
+	log.Printf("Updated counter %s value: %d", m.ID, *ms.Metrics[m.ID].Delta)
 }
 
 func (ms *MemStorage) GetMetric(name string) (*common.Metric, error) {

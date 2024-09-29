@@ -1,9 +1,9 @@
 package agent
 
 import (
-	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/i-eliseyev/go-metric/internal/common"
+	"github.com/i-eliseyev/go-metric/internal/utils"
 	"log"
 	"os"
 	"runtime"
@@ -15,150 +15,150 @@ func FillMetrics(metrics *common.Metrics) {
 	runtime.ReadMemStats(&memStats)
 
 	(*metrics)["alloc"] = common.Metric{
-		Name: "Alloc",
-		Type: "gauge",
-		Val:  float64(memStats.Alloc),
+		ID:    "Alloc",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.Alloc),
 	}
 	(*metrics)["buckHashSys"] = common.Metric{
-		Name: "BuckHashSys",
-		Type: "gauge",
-		Val:  float64(memStats.BuckHashSys),
+		ID:    "BuckHashSys",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.BuckHashSys),
 	}
 	(*metrics)["frees"] = common.Metric{
-		Name: "Frees",
-		Type: "gauge",
-		Val:  float64(memStats.Frees),
+		ID:    "Frees",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.Frees),
 	}
 	(*metrics)["gCCPUFraction"] = common.Metric{
-		Name: "GCCPUFraction",
-		Type: "gauge",
-		Val:  memStats.GCCPUFraction,
+		ID:    "GCCPUFraction",
+		MType: "gauge",
+		Value: &memStats.GCCPUFraction,
 	}
 	(*metrics)["gSys"] = common.Metric{
-		Name: "GSys",
-		Type: "gauge",
-		Val:  float64(memStats.GCSys),
+		ID:    "GSys",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.GCSys),
 	}
 	(*metrics)["heapAlloc"] = common.Metric{
-		Name: "HeapAlloc",
-		Type: "gauge",
-		Val:  float64(memStats.HeapAlloc),
+		ID:    "HeapAlloc",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.HeapAlloc),
 	}
 	(*metrics)["heapIdle"] = common.Metric{
-		Name: "HeapIdle",
-		Type: "gauge",
-		Val:  float64(memStats.HeapIdle),
+		ID:    "HeapIdle",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.HeapIdle),
 	}
 	(*metrics)["heapInuse"] = common.Metric{
-		Name: "HeapInuse",
-		Type: "gauge",
-		Val:  float64(memStats.HeapInuse),
+		ID:    "HeapInuse",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.HeapInuse),
 	}
 	(*metrics)["heapObjects"] = common.Metric{
-		Name: "HeapObjects",
-		Type: "gauge",
-		Val:  float64(memStats.HeapObjects),
+		ID:    "HeapObjects",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.HeapObjects),
 	}
 	(*metrics)["heapReleased"] = common.Metric{
-		Name: "HeapReleased",
-		Type: "gauge",
-		Val:  float64(memStats.HeapReleased),
+		ID:    "HeapReleased",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.HeapReleased),
 	}
 	(*metrics)["heapSys"] = common.Metric{
-		Name: "HeapSys",
-		Type: "gauge",
-		Val:  float64(memStats.HeapSys),
+		ID:    "HeapSys",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.HeapSys),
 	}
 	(*metrics)["lastGC"] = common.Metric{
-		Name: "LastGC",
-		Type: "gauge",
-		Val:  float64(memStats.LastGC),
+		ID:    "LastGC",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.LastGC),
 	}
 	(*metrics)["lookups"] = common.Metric{
-		Name: "Lookups",
-		Type: "gauge",
-		Val:  float64(memStats.Lookups),
+		ID:    "Lookups",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.Lookups),
 	}
 	(*metrics)["mCacheInuse"] = common.Metric{
-		Name: "MCacheInuse",
-		Type: "gauge",
-		Val:  float64(memStats.MCacheInuse),
+		ID:    "MCacheInuse",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.MCacheInuse),
 	}
 	(*metrics)["mCacheSys"] = common.Metric{
-		Name: "MCacheSys",
-		Type: "gauge",
-		Val:  float64(memStats.MCacheSys),
+		ID:    "MCacheSys",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.MCacheSys),
 	}
 	(*metrics)["mSpanInuse"] = common.Metric{
-		Name: "MSpanInuse",
-		Type: "gauge",
-		Val:  float64(memStats.MSpanInuse),
+		ID:    "MSpanInuse",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.MSpanInuse),
 	}
 	(*metrics)["mSpanSys"] = common.Metric{
-		Name: "MSpanSys",
-		Type: "gauge",
-		Val:  float64(memStats.MSpanSys),
+		ID:    "MSpanSys",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.MSpanSys),
 	}
 	(*metrics)["mallocs"] = common.Metric{
-		Name: "Mallocs",
-		Type: "gauge",
-		Val:  float64(memStats.Mallocs),
+		ID:    "Mallocs",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.Mallocs),
 	}
 	(*metrics)["nextGC"] = common.Metric{
-		Name: "NextGC",
-		Type: "gauge",
-		Val:  float64(memStats.NextGC),
+		ID:    "NextGC",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.NextGC),
 	}
 	(*metrics)["numForcedGC"] = common.Metric{
-		Name: "NumForcedGC",
-		Type: "gauge",
-		Val:  float64(memStats.NumForcedGC),
+		ID:    "NumForcedGC",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(uint64(memStats.NumForcedGC)),
 	}
 	(*metrics)["numGC"] = common.Metric{
-		Name: "NumGC",
-		Type: "gauge",
-		Val:  float64(memStats.NumGC),
+		ID:    "NumGC",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(uint64(memStats.NumGC)),
 	}
 	(*metrics)["otherSys"] = common.Metric{
-		Name: "OtherSys",
-		Type: "gauge",
-		Val:  float64(memStats.OtherSys),
+		ID:    "OtherSys",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.OtherSys),
 	}
 	(*metrics)["pauseTotalNs"] = common.Metric{
-		Name: "PauseTotalNs",
-		Type: "gauge",
-		Val:  float64(memStats.PauseTotalNs),
+		ID:    "PauseTotalNs",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.PauseTotalNs),
 	}
 	(*metrics)["stackInuse"] = common.Metric{
-		Name: "StackInuse",
-		Type: "gauge",
-		Val:  float64(memStats.StackInuse),
+		ID:    "StackInuse",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.StackInuse),
 	}
 	(*metrics)["stackSys"] = common.Metric{
-		Name: "StackSys",
-		Type: "gauge",
-		Val:  float64(memStats.StackSys),
+		ID:    "StackSys",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.StackSys),
 	}
 	(*metrics)["sys"] = common.Metric{
-		Name: "Sys",
-		Type: "gauge",
-		Val:  float64(memStats.Sys),
+		ID:    "Sys",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.Sys),
 	}
 	(*metrics)["totalAlloc"] = common.Metric{
-		Name: "TotalAlloc",
-		Type: "gauge",
-		Val:  float64(memStats.TotalAlloc),
+		ID:    "TotalAlloc",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(memStats.TotalAlloc),
 	}
-	GlobalCounter++
+	GlobalPollsCounter++
 	(*metrics)["pollCount"] = common.Metric{
-		Name: "PollCount",
-		Type: "counter",
-		Val:  GlobalCounter,
+		ID:    "PollCount",
+		MType: "counter",
+		Delta: &GlobalPollsCounter,
 	}
 	(*metrics)["randomValue"] = common.Metric{
-		Name: "RandomValue",
-		Type: "gauge",
-		Val:  float64(time.Now().UnixNano()),
+		ID:    "RandomValue",
+		MType: "gauge",
+		Value: utils.UInt64ToFloat64Ptr(uint64(time.Now().UnixNano())),
 	}
 }
 
@@ -167,19 +167,19 @@ func ReportMetrics(metrics *common.Metrics) {
 	client.SetRetryCount(RetryCount).SetRetryWaitTime(RetryWaitTime)
 
 	for _, metric := range *metrics {
+
 		pathParams := map[string]string{
 			"baseURL": ServerAddr,
 			"port":    ServerPort,
-			"type":    metric.Type,
-			"name":    metric.Name,
-			"value":   fmt.Sprintf("%f", metric.Val),
 		}
+		responseMetric := new(common.Metric)
 
 		resp, err := client.
 			R().
-			SetHeader("Content-Type", "text/plain").
+			SetBody(metric).
 			SetPathParams(pathParams).
-			Post("http://{baseURL}:{port}/update/{type}/{name}/{value}")
+			SetResult(responseMetric).
+			Post("http://{baseURL}:{port}/update/")
 
 		if err != nil {
 			log.Println(err)
@@ -187,6 +187,6 @@ func ReportMetrics(metrics *common.Metrics) {
 		}
 
 		log.Println("Status: ", resp.Status())
-		log.Println(resp.Request.URL)
+		log.Println("Response: ", responseMetric)
 	}
 }
