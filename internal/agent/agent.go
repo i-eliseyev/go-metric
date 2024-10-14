@@ -2,7 +2,9 @@ package agent
 
 import (
 	"github.com/go-resty/resty/v2"
+	"github.com/i-eliseyev/go-metric/internal"
 	"github.com/i-eliseyev/go-metric/internal/common"
+	"github.com/i-eliseyev/go-metric/internal/security"
 	"github.com/i-eliseyev/go-metric/internal/utils"
 	"log"
 	"os"
@@ -167,6 +169,7 @@ func ReportMetrics(metrics *common.Metrics) {
 	client.SetRetryCount(RetryCount).SetRetryWaitTime(RetryWaitTime)
 
 	for _, metric := range *metrics {
+		security.SignMetric(&metric, internal.SECRET)
 
 		pathParams := map[string]string{
 			"baseURL": ServerAddr,
@@ -187,6 +190,6 @@ func ReportMetrics(metrics *common.Metrics) {
 		}
 
 		log.Println("Status: ", resp.Status())
-		log.Println("Response: ", responseMetric)
+		log.Println("Response: ", *responseMetric)
 	}
 }
